@@ -24,7 +24,7 @@ export default function Home() {
           </h2>
 
           <p className="text-lg text-[#333] max-w-xl mb-12">
-            Simplify your investments with a clean, modern platform inspired by Vanguard's legacy of trust.
+            Simplify your investments with a clean, modern platform inspired by Vanguards legacy of trust.
           </p>
 
           <a
