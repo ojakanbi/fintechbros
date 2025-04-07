@@ -1,30 +1,35 @@
-// Mongo db connection 
+// Load environment variables at the top
+require('dotenv').config();
 
-const mongose = require('mongoose');
+const mongoose = require('mongoose');
 
-const connectDB = async () => { 
-    try {
-        const conn = await mongose.connect(process.env.MONGO_URI, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        });
-        console.log(`MongoDB Connected: ${conn.connection.host}`);
-    } catch (error) {
-        console.log(`Error: ${error.message}`);
-        process.exit(1);
+const connectDB = async () => {
+  try {
+    const mongoURI = process.env.MONGO_URI;
+
+    if (!mongoURI) {
+      throw new Error("MONGO_URI is not defined in the environment variables.");
     }
-}
+
+    const conn = await mongoose.connect(mongoURI);
+    console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
+  } catch (error) {
+    console.error(`❌ Error connecting to MongoDB: ${error.message}`);
+    process.exit(1);
+  }
+};
 
 module.exports = connectDB;
 
-// Only uncomment this if you want to test the database connection
-
-// if (require.main === module) {
-//     require('dotenv').config(); // Load env variables when running standalone
-  
-//     connectDB().then(() => {
-//       console.log('Database connection test completed');
-//       process.exit(0); // Close the connection and exit
-//     });
-//   }
-  
+// If this file is run directly (not imported), test the connection
+if (require.main === module) {
+  connectDB()
+    .then(() => {
+      console.log('✅ Database connection test completed.');
+      process.exit(0);
+    })
+    .catch((err) => {
+      console.error('❌ Failed to connect during standalone run.');
+      process.exit(1);
+    });
+}
